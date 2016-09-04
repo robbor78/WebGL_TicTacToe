@@ -6,6 +6,12 @@ var shaderProgram;
 var vbo;
 var ibo;
 
+var mouseDown;
+var lastMouseX;
+var lastMouseY;
+
+var angle = 31.0;
+
 
 function start() {
     canvas = document.getElementById("glcanvas");
@@ -31,9 +37,11 @@ function start() {
 
     initBuffers();
 
-    setInterval(drawScene, 15);
+    canvas.onmousedown = handleMouseDown;
+    document.onmouseup = handleMouseUp;
+    document.onmousemove = handleMouseMove;
 
-    //http://learningwebgl.com/blog/?p=1253
+    setInterval(drawScene, 15);
 }
 
 function initBuffers() {
@@ -66,7 +74,7 @@ function drawScene() {
 
     loadIdentity();
     mvTranslate([-0.0, 0.0, -6.0]);
-    mvRotate(31.0, [0, 0, 1]);
+    mvRotate(angle, [0, 0, 1]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
     gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
@@ -152,6 +160,28 @@ function getShader(gl, id, type) {
     }
 
     return shader;
+}
+
+function handleMouseDown(event) {
+    mouseDown = true;
+    lastMouseX = event.clientX;
+    lastMouseY = event.clientY;
+}
+
+function handleMouseUp(event) {
+    mouseDown = false;
+}
+
+function handleMouseMove(event) {
+    if (!mouseDown) {
+        return;
+    }
+
+    var newX = event.clientX;
+    var newY = event.clientY;
+
+    angle += (newX - lastMouseX) / 10.0;
+
 }
 
 //
