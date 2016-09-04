@@ -32,6 +32,8 @@ function start() {
     initBuffers();
 
     setInterval(drawScene, 15);
+
+    //http://learningwebgl.com/blog/?p=1253
 }
 
 function initBuffers() {
@@ -64,6 +66,7 @@ function drawScene() {
 
     loadIdentity();
     mvTranslate([-0.0, 0.0, -6.0]);
+    mvRotate(31.0, [0, 0, 1]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
     gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
