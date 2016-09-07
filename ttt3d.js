@@ -13,7 +13,8 @@ var mouseDown;
 var lastMouseX;
 var lastMouseY;
 
-var angle = 31.0;
+var angleZ = 31.0;
+var angleX = 0.0;
 
 
 function start() {
@@ -51,10 +52,10 @@ function start() {
 function initFloorBuffers() {
     var vertices = [
         // Front face
-            -1.0, -1.0,  0.0,
-        1.0, -1.0,  0.0,
-        1.0,  1.0,  0.0,
-            -1.0,  1.0,  0.0
+            -1.0, -1.0,  -0.1,
+        1.0, -1.0,  -0.1,
+        1.0,  1.0,  -0.1,
+            -1.0,  1.0,  -0.1
     ];
 
     var indices = [
@@ -154,7 +155,8 @@ function drawScene() {
 
     loadIdentity();
     mvTranslate([-0.0, 0.0, -6.0]);
-    //mvRotate(angle, [0, 0, 1]);
+    mvRotate(angleZ, [0, 0, 1]);
+    mvRotate(angleX,[1,0,0]);
 
     drawFloor();
     drawGrid();
@@ -277,7 +279,9 @@ function handleMouseMove(event) {
     var newX = event.clientX;
     var newY = event.clientY;
 
-    angle += (newX - lastMouseX) / 10.0;
+    angleX += (newX - lastMouseX) / 10.0;
+
+    angleZ += (newY - lastMouseY) / 10.0;
 
 }
 
