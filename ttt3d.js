@@ -162,6 +162,7 @@ function drawScene() {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gridIBO);
 
     setMatrixUniforms();
+    setColourUniform([1,1,1,1]);
 
     gl.drawElements(gl.TRIANGLES, 72, gl.UNSIGNED_SHORT, 0);
 
@@ -286,6 +287,11 @@ function setMatrixUniforms() {
 
     var mvUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
     gl.uniformMatrix4fv(mvUniform, false, new Float32Array(mvMatrix.flatten()));
+}
+
+function setColourUniform(colour) {
+    var uniformColour = gl.getUniformLocation(shaderProgram, "uColour");
+    gl.uniform4fv(uniformColour, colour);
 }
 
 function mvPushMatrix(m) {
