@@ -16,6 +16,11 @@ var lastMouseY;
 var angleZ = 31.0;
 var angleX = 0.0;
 
+var zNear = 0.1;
+var zFar = 100.0;
+
+var mvMatrix;
+var perspectiveMatrix;
 
 function start() {
     canvas = document.getElementById("glcanvas");
@@ -147,11 +152,10 @@ function initGridBuffers() {
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices),gl.STATIC_DRAW);
 }
 
-
 function drawScene() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER);
 
-    perspectiveMatrix = makePerspective(45, 640.0/480.0, 0.1, 100.0);
+    perspectiveMatrix = makePerspective(45, 640.0/480.0, zNear, zFar);
 
     loadIdentity();
     mvTranslate([-0.0, 0.0, -6.0]);
@@ -183,7 +187,6 @@ function drawGrid() {
     setColourUniform([1,1,1,0.5]);
 
     gl.drawElements(gl.TRIANGLES, 72, gl.UNSIGNED_SHORT, 0);
-
 }
 
 function initWebGL(canvas) {
@@ -263,18 +266,40 @@ function getShader(gl, id, type) {
 
 function handleMouseDown(event) {
     mouseDown = true;
+    mouseDrag = false;
     lastMouseX = event.clientX;
     lastMouseY = event.clientY;
 }
 
 function handleMouseUp(event) {
     mouseDown = false;
+
+    if (mouseDrag) {return;}
+
+    var mouseX = event.clientX;
+    var mouseY = event.clientY;
+
+    var clipX = mouseX / gl.canvas.clientWidth  * 2 - 1;
+    var clipY = mouseY / gl.canvas.clientHeight * -2 + 1;   // because GL is 0 at bottom
+    var clipZ = -1;
+
+    var tempNear = [clipX * zNear, clipY * zNear, -zNear, zNear];
+
+    var tempNearVec = Vector.create(tempNear);
+
+    var worldSpacePoint = perspectiveMatrix.x(mvMatrix).inverse().x(tempNearVec);
+
+    console.log(worldSpacePoint.e(1)+" "+worldSpacePoint.e(2)+" "+worldSpacePoint.e(3)+" "+worldSpacePoint.e(4)+" ")
+
+
 }
 
 function handleMouseMove(event) {
     if (!mouseDown) {
         return;
     }
+
+    mouseDrag = true;
 
     var newX = event.clientX;
     var newY = event.clientY;
