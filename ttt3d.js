@@ -3,8 +3,11 @@ var gl; // A global variable for the WebGL context
 
 var shaderProgram;
 
-var vbo;
-var ibo;
+var floorVBO;
+var floorIBO;
+
+var gridVBO;
+var gridIBO;
 
 var mouseDown;
 var lastMouseX;
@@ -36,6 +39,7 @@ function start() {
     initShaders();
 
     initFloorBuffers();
+    initGridBuffers();
 
     canvas.onmousedown = handleMouseDown;
     document.onmouseup = handleMouseUp;
@@ -57,16 +61,16 @@ function initFloorBuffers() {
         0,1,2, 0,2,3
     ];
 
-    vbo = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+    floorVBO = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, floorVBO);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 
-    ibo = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ibo);
+    floorIBO = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,floorIBO);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices),gl.STATIC_DRAW);
 }
 
-function initGridBuffes() {
+function initGridBuffers() {
 
     var vertices = [
 
@@ -123,7 +127,6 @@ function initGridBuffes() {
         19,20,22, //T U W
         24,22,23, //Y W X
         24,25,22,//Y Z W
-
         1,4,31, //B E AF
         1,19,22,//B T W
         4,5,29,//E F AD
@@ -132,10 +135,15 @@ function initGridBuffes() {
         5,15,18,//F P S
         31,30,18, //AF AE S
         31,18,19,//AF S T
-
-
     ];
 
+    gridVBO = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridVBO);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+    gridIBO = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,gridIBO);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices),gl.STATIC_DRAW);
 }
 
 
@@ -145,17 +153,17 @@ function drawScene() {
     perspectiveMatrix = makePerspective(45, 640.0/480.0, 0.1, 100.0);
 
     loadIdentity();
-    mvTranslate([-0.0, 0.0, -12.0]);
-    mvRotate(angle, [0, 0, 1]);
+    mvTranslate([-0.0, 0.0, -6.0]);
+    //mvRotate(angle, [0, 0, 1]);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gridVBO);
     gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gridIBO);
 
     setMatrixUniforms();
 
-    gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+    gl.drawElements(gl.TRIANGLES, 72, gl.UNSIGNED_SHORT, 0);
 
 }
 
