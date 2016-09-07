@@ -156,13 +156,29 @@ function drawScene() {
     mvTranslate([-0.0, 0.0, -6.0]);
     //mvRotate(angle, [0, 0, 1]);
 
+    drawFloor();
+    drawGrid();
+}
+
+function drawFloor() {
+    gl.bindBuffer(gl.ARRAY_BUFFER, floorVBO);
+    gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, floorIBO);
+
+    setMatrixUniforms();
+    setColourUniform([1,0,0,1]);
+
+    gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+}
+
+function drawGrid() {
     gl.bindBuffer(gl.ARRAY_BUFFER, gridVBO);
     gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gridIBO);
 
-    setMatrixUniforms();
-    setColourUniform([1,1,1,1]);
+    setColourUniform([1,1,1,0.5]);
 
     gl.drawElements(gl.TRIANGLES, 72, gl.UNSIGNED_SHORT, 0);
 
