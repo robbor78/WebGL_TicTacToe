@@ -35,7 +35,7 @@ function start() {
 
     initShaders();
 
-    initBuffers();
+    initFloorBuffers();
 
     canvas.onmousedown = handleMouseDown;
     document.onmouseup = handleMouseUp;
@@ -44,13 +44,13 @@ function start() {
     setInterval(drawScene, 15);
 }
 
-function initBuffers() {
+function initFloorBuffers() {
     var vertices = [
         // Front face
-            -1.0, -1.0,  1.0,
-        1.0, -1.0,  1.0,
-        1.0,  1.0,  1.0,
-            -1.0,  1.0,  1.0
+            -1.0, -1.0,  0.0,
+        1.0, -1.0,  0.0,
+        1.0,  1.0,  0.0,
+            -1.0,  1.0,  0.0
     ];
 
     var indices = [
@@ -66,6 +66,49 @@ function initBuffers() {
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices),gl.STATIC_DRAW);
 }
 
+function initGridBuffes() {
+
+    var vertices = [
+
+            -0.9, 0.35, 0, //A
+            -0.35, 0.35, 0, //B
+            -0.35, 0.9, 0, //C
+            -0.31, 0.9, 0, //D
+            -0.31, 0.35, 0, //E
+        0.31, 0.35, 0, //F
+        0.31, 0.9, 0, //G
+        0.35, 0.9, 0, //H
+        0.35, 0.35, 0, //I
+        0.9, 0.35, 0, //J
+        0.9, 0.31, 0, //K
+        0.35, 0.31, 0, //L
+        0.35, -0.31, 0, //M
+        0.9, -0.31, 0, //N
+        0.9, -0.35, 0, //O
+        0.35, -0.35, 0, //P
+        0.35, -0.9, 0, //Q
+        0.31, -0.9, 0, //R
+        0.31, -0.35, 0, //S
+            -0.31, -0.35, 0, //T
+            -0.31, -0.9, 0, //U
+            -0.35, -0.9, 0, //V
+            -0.35, -0.35, 0, //W
+            -0.9, -0.35, 0, //X
+            -0.9, -0.31, 0, //Y
+            -0.35, -0.31, 0, //Z
+            -0.35, +0.31, 0, //AA
+            -0.9, +0.31, 0, //AB
+            -0.31, 0.31, 0, //AC
+        0.31, 0.31, 0, //AD
+        0.31, -0.31, 0, //AE
+            -0.31, -0.31, 0 //AF
+
+    ];
+
+    var indices = [];
+
+}
+
 
 function drawScene() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER);
@@ -73,7 +116,7 @@ function drawScene() {
     perspectiveMatrix = makePerspective(45, 640.0/480.0, 0.1, 100.0);
 
     loadIdentity();
-    mvTranslate([-0.0, 0.0, -6.0]);
+    mvTranslate([-0.0, 0.0, -12.0]);
     mvRotate(angle, [0, 0, 1]);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
